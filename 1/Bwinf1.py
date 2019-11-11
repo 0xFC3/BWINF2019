@@ -4,7 +4,7 @@ text = []
 for line in f:
     text.append(line[:-1])
 
-beet = [1,2,3,4,5,6,7,7,7]
+beet = [1,2,3,4,5,6,7,7,7] # defining random beet
 best_beet = []
 colours = {'blau': 1, 'gelb': 2, 'gruen': 3, 'orange': 4, 'rosa': 5, 'rot': 6, 'tuerkis': 7}
 
@@ -20,11 +20,12 @@ for i in range(2, len(text)):
     preferred.append((int(c[2]), (colours[c[0]], colours[c[1]])))
     pre_out.append((int(c[2]), c[0], c[1]))
 
+# outputting the input
 print('Der Kunde möchte ' + str(max_colours) + ' verschiedene Farben haben.')
 print('Außerdem hat er folgende Lieblingskombinationen:')
 [print(item) for item in pre_out]
 
-def calc_points(beet, preferred):
+def calc_points(beet, preferred): # method that calculates the points a beet gets
     global connections
     points = 0
     for connection in connections:
@@ -37,21 +38,21 @@ def calc_points(beet, preferred):
 points = calc_points(beet, preferred)
 
 
-def loop(col_count, colours_ava, colours_used, i):
+def loop(col_count, colours_ava, colours_used, i): # recursive method
     d = colours_ava.copy()
     z = colours_used.copy()
     f = col_count
     global points, beet, preferred, best_beet, max_colours
     for e in range(len(colours_ava)):
         beet[i] = colours_ava[e]
-        colours_used.append(colours_ava[e])
+        colours_used.add(colours_ava[e])
         dif = True
         for plant in beet[:i]:
             if colours_ava[e] == plant:
                 dif = False
         if dif != False: col_count -= 1
         if max_colours == max_colours - col_count:
-            colours_ava = colours_used.copy()
+            colours_ava = list(colours_used).copy()
         if col_count == 8 - i:
             for plant in beet[:i + 1]:
                 try:
@@ -69,14 +70,14 @@ def loop(col_count, colours_ava, colours_used, i):
         colours_used = z.copy()
     return
 
-def opt_beet(preferred):
+def opt_beet(preferred): # method that controls the other methods
     global colours, beet, max_colours
     colours_ava = [1,2,3,4,5,6,7]
     col_count = max_colours
-    loop(col_count, colours_ava, [], 0)
+    loop(col_count, colours_ava, set([]), 0)
     return
 
-def switch(ar, col):
+def switch(ar, col): # method that maps colours to the numbers
     inv_map = {v: k for k, v in col.items()}
     for i in range(len(ar)):
         ar[i] = inv_map[ar[i]]
