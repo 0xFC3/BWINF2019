@@ -17,10 +17,9 @@ beste_route = []
 ## add all the gas stations
 for i in range(5, len(text)):
     b = text[i].split(' ')
-    gas_stations.append([float(b[0]), float(b[-1])])
+    gas_stations.append([float(b[0]), float(b[-1][0] + '.' + b[-1][1:])])
 
 stations = copy.deepcopy(gas_stations)
-
 def calc_range(cons, fill): ## calculates the range the car will drive with certain amount of fuel and consumption
     return fill / cons * 100
 
@@ -105,6 +104,7 @@ def loop(gas_stations, r, fill, cons, tsize, distance, min_stops, b_fill, b_dis)
             continue
         elif min_stops != 1:
             loop(gas_stations, r+1, fill, cons, tsize, distance, min_stops, b_fill, b_dis)
+            print(route)
         gas_stations = copy.deepcopy(c1)
         r, fill, distance = (c2, c3, c4)
     return
@@ -114,9 +114,11 @@ def find_best_route(cons, gas_stations, fill, tsize, distance): ## manages all t
     min_stops = find_min_amount_of_stopping(cons, gas_stations, fill, distance)
     gas_stations = copy.deepcopy(stations)
     loop(gas_stations, 0, fill, cons, tsize, distance, min_stops, fill, distance)
-    return beste_route
+    return (beste_route, min_stops)
 
 if __name__ == '__main__':
-    beste_route = find_best_route(cons, gas_stations, fill, tsize, distance)
-    print(beste_route)
+    beste_route, min_stops = find_best_route(cons, gas_stations, fill, tsize, distance)
+    print("Anzahl der durchgeführten Tankstopps: " + str(min_stops))
+    print('Preis für die ganze Reise: {:.2f}€'.format(beste_route[-1]))
+    print(beste_route[:-1])
 
